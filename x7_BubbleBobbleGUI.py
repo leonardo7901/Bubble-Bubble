@@ -67,19 +67,12 @@ class BubbleBobbleGUI:
                 self._game = BubbleBobbleGame(self._k)
 
         self._numbers_scores = self._game.write_scores()
-        #print(self._numbers_scores)
 
         self._x = 8
         for i in self._numbers_scores:
             self._x_number, self._y_number = i
             g2d.draw_image_clip(self._sprites, (self._x_number, self._y_number, 8, 8), (self._x, 8, 8, 8))
             self._x += 8
-        print(self._x)    
-
-        '''g2d.draw_text("Alessandro", (16, 8), 16)
-        g2d.set_color((0, 0, 0))
-        g2d.fill_rect((0,0,512,32))'''
-        
 
         for a in arena.actors():
             if a.symbol() != (0, 0, 0, 0):

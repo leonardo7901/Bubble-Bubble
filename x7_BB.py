@@ -344,7 +344,6 @@ class Score():
     def score(self, n):
         self._symbol_list = []
         self._score += n
-        #print(self._score)
         self._score = str(self._score)
         for h in self._score:
             self._symbol_list.append(self._numbers_white[int(h)])
