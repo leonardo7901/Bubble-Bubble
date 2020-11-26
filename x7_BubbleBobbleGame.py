@@ -33,7 +33,6 @@ class BubbleBobbleGame:
 
         for obj in self._player:
             obj.remove_bubbles()
-            #if n == (len(self._levels) - 1):
             obj.remove()
         for obj in self._enemies:
             obj.death()
@@ -85,37 +84,46 @@ class BubbleBobbleGame:
         return self._player2 
 
     def game_won(self):
-        if self._player1.enemy_killed() or self._player2.enemy_killed():
+        if self._player1.enemy_killed():
             self._cont_killed += 1
-            self._points += 500
+            self._points = 500
         else:
             self._points = 0    
 
         if self._cont_killed == self._cont_enemy:   
             self._win = True
+            #self._cont_killed = 0
         else:
-            self._win = False                         
+            self._win = False                        
         
         return self._win
 
     def game_over(self):
-        if self._player1_ready:
-            if self._player1.dead() and self._player2_ready == False:
+        if self._player1_ready and self._player2_ready:
+            if self._player1.dead() and self._player1.dead():
                 self._lost = True
+                self._scores.reset()
             else:
                 self._lost = False
-        elif self._player2_ready:
-            if self._player2.dead():
-                self._lost = True
-            else:
-                self._lost = False
+        else:        
+            if self._player1_ready:
+                if self._player1.dead() and self._player2_ready == False:
+                    self._lost = True
+                    self._scores.reset()
+                else:
+                    self._lost = False
+            elif self._player2_ready:
+                if self._player2.dead():
+                    self._lost = True
+                    self._scores.reset()
+                else:
+                    self._lost = False
 
-        print(self._lost)
         return self._lost                  
 
     def write_scores(self):
         self._coordinates = self._scores.score(self._points)
-
+        
         return self._coordinates
 
     def total_levels(self):

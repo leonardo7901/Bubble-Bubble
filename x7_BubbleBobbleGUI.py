@@ -74,6 +74,15 @@ class BubbleBobbleGUI:
         if 0 < self._k < self._total_levels:
             self._x_background, self._y_background = self._x_y_background[self._k]
             g2d.draw_image_clip(self._background, (self._x_background, self._y_background, 512, 424), (0, 32, 512, 424))
+
+            if self._game.game_won():
+                self._k += 1
+                self._game.levels(self._k, self._player1_ready, self._player2_ready)
+            
+            if self._game.game_over():
+                self._k = 0
+                self._game.levels(self._k, self._player1_ready, self._player2_ready)
+
         elif self._k == 0:
             g2d.draw_image_clip(self._menu, (0, 0, 512, 424), (0, 32, 512, 424))
             if self._player1_ready:    
@@ -85,15 +94,7 @@ class BubbleBobbleGUI:
             else:
                 g2d.draw_image_clip(self._ready, (0, 20, 174, 18), (312, 316, 174, 16))
         else:
-            g2d.draw_image_clip(self._end, (0, 0, 512, 424), (0, 32, 512, 424))
-            
-        if self._game.game_won():
-            self._k += 1
-            self._game.levels(self._k, self._player1_ready, self._player2_ready)
-        
-        if self._game.game_over():
-            self._k = 0
-            self._game.levels(self._k, self._player1_ready, self._player2_ready)  
+            g2d.draw_image_clip(self._end, (0, 0, 512, 424), (0, 32, 512, 424))  
 
         self._numbers_scores = self._game.write_scores()
 

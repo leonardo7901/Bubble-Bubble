@@ -368,7 +368,7 @@ class Score():
             self._symbol_list.append(self._numbers_white[int(h)])
             str(h)
         self._score = int(self._score)
-
+        print(self._score)
         return self._symbol_list
 
     def reset(self):
