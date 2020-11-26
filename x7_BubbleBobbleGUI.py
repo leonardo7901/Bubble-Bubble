@@ -6,13 +6,17 @@ from x7_BubbleBobbleGame import BubbleBobbleGame
 class BubbleBobbleGUI:
     def __init__(self):
         self._game = BubbleBobbleGame()
+        self._total_levels = self._game.total_levels()
         self._sprites = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble.png")
         self._background = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble-maps.png")
-        self._x_y_background = [(0, 0), (512, 0)]
+        self._ready = g2d.load_image("r-nr.png")
+        self._menu = g2d.load_image("BB-main-menu.png")
+        self._end = g2d.load_image("BB-end.png")
+        self._x_y_background = [(0,0), (0, 0), (512, 0), (0, 0), (0, 0)]
+        self._player1_ready, self._player2_ready = False, False
         self._k = 0
         self._numbers_scores = []
         self._x = 8
-        self._waiting = -165
         g2d.init_canvas(self._game.arena().size())
         g2d.main_loop(self.tick)
 
@@ -33,6 +37,8 @@ class BubbleBobbleGUI:
             player1.go_left(False)
 
         if g2d.key_pressed("q"):
+            if self._k == 0:
+                self._player1_ready = not self._player1_ready
             player1.attack()
 
         if g2d.key_pressed("ArrowUp"):
@@ -49,7 +55,15 @@ class BubbleBobbleGUI:
             player2.go_left(False)
 
         if g2d.key_pressed("Spacebar"):
-            player2.attack()               
+            if self._k == 0:
+                self._player2_ready = not self._player2_ready
+            player2.attack()
+
+        if self._k == 0:
+            if self._player1_ready or self._player2_ready:
+                if g2d.key_pressed("Enter"):
+                    self._k = 1
+                    self._game.levels(self._k, self._player1_ready, self._player2_ready)          
 
     def tick(self):
         self.movement()
@@ -57,20 +71,29 @@ class BubbleBobbleGUI:
         arena.move_all()    
         g2d.clear_canvas()
         
-        self._x_background, self._y_background = self._x_y_background[self._k]
-        g2d.draw_image_clip(self._background, (self._x_background, self._y_background, 512, 424), (0, 32, 512, 424))
-       
-        if self._game.game_won():
-            if self._waiting >= 0:
-                self._k += 1
-                if self._k >= self._game.total_levels():
-                    g2d.clear_canvas()
-                    g2d.alert("Game Won!")
-                else:
-                    self._game.levels(self._k) 
+        if 0 < self._k < self._total_levels:
+            self._x_background, self._y_background = self._x_y_background[self._k]
+            g2d.draw_image_clip(self._background, (self._x_background, self._y_background, 512, 424), (0, 32, 512, 424))
+        elif self._k == 0:
+            g2d.draw_image_clip(self._menu, (0, 0, 512, 424), (0, 32, 512, 424))
+            if self._player1_ready:    
+                g2d.draw_image_clip(self._ready, (0, 0, 100, 18), (312, 284, 100, 16))
             else:
-                self._waiting += 1 
-            print(self._waiting)
+                g2d.draw_image_clip(self._ready, (0, 20, 174, 18), (312, 284, 174, 16))
+            if self._player2_ready:    
+                g2d.draw_image_clip(self._ready, (0, 0, 100, 18), (312, 316, 100, 16))
+            else:
+                g2d.draw_image_clip(self._ready, (0, 20, 174, 18), (312, 316, 174, 16))
+        else:
+            g2d.draw_image_clip(self._end, (0, 0, 512, 424), (0, 32, 512, 424))
+            
+        if self._game.game_won():
+            self._k += 1
+            self._game.levels(self._k, self._player1_ready, self._player2_ready)
+        
+        if self._game.game_over():
+            self._k = 0
+            self._game.levels(self._k, self._player1_ready, self._player2_ready)  
 
         self._numbers_scores = self._game.write_scores()
 

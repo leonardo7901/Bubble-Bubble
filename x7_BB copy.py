@@ -162,7 +162,6 @@ class Dragon(Actor):
         self._landed = False
         self._enemy_killed = False
         self._enemy_dead = False
-        self._dead = False
         arena.add(self)
 
     def move(self):
@@ -246,13 +245,8 @@ class Dragon(Actor):
         self._lives -= 1
         if self._lives == 0:
             self._arena.remove(self)
-            self._dead = True
         else:
             self._x, self._y = self._spawn
-            self._dead = False    
-
-    def dead(self):
-        return self._dead        
 
     def remove(self):
         self._arena.remove(self)
@@ -370,7 +364,4 @@ class Score():
         self._score = int(self._score)
 
         return self._symbol_list
-
-    def reset(self):
-        self._score = 0    
             
