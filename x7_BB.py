@@ -17,6 +17,9 @@ class Wall(Actor):
     def collide(self, other):
         pass
 
+    def remove(self):
+        self._arena.remove(self)
+
     def position(self):
         return self._x, self._y, self._w, self._h
 
@@ -241,7 +244,10 @@ class Dragon(Actor):
         if self._lives == 0:
             self._arena.remove(self)
         else:
-            self._x, self._y = self._spawn    
+            self._x, self._y = self._spawn
+
+    def remove(self):
+        self._arena.remove(self)
 
     def position(self):
         return self._x, self._y, self._w, self._h
@@ -296,8 +302,8 @@ class Bubble(Actor):
                 self._dy = 0    
         else:
             self._y += self._dy
-            if self._y <= 32:
-                self._y = 32
+            if self._y <= 64:
+                self._y = 64
                 self._dy = 0
             elif self._y > self._arena_h - self._h:
                 self._y = self._arena_h - self._h                  

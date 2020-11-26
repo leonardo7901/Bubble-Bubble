@@ -5,13 +5,14 @@ from x7_BubbleBobbleGame import BubbleBobbleGame
 
 class BubbleBobbleGUI:
     def __init__(self):
-        self._game = BubbleBobbleGame(0)
+        self._game = BubbleBobbleGame()
         self._sprites = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble.png")
         self._background = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble-maps.png")
         self._x_y_background = [(0, 0), (512, 0)]
         self._k = 0
         self._numbers_scores = []
         self._x = 8
+        self._waiting = -165
         g2d.init_canvas(self._game.arena().size())
         g2d.main_loop(self.tick)
 
@@ -55,16 +56,22 @@ class BubbleBobbleGUI:
         arena = self._game.arena()
         arena.move_all()    
         g2d.clear_canvas()
+        
         self._x_background, self._y_background = self._x_y_background[self._k]
         g2d.draw_image_clip(self._background, (self._x_background, self._y_background, 512, 424), (0, 32, 512, 424))
        
         if self._game.game_won():
-            self._k += 1
-            if self._k >= self._game.total_levels():
-                g2d.clear_canvas()
-                g2d.alert("Game Won!")
+            if self._waiting >= 0:
+                self._k += 1
+                self._waiting = -165
+                if self._k >= self._game.total_levels():
+                    g2d.clear_canvas()
+                    g2d.alert("Game Won!")
+                else:
+                    self._game.levels(self._k) 
             else:
-                self._game = BubbleBobbleGame(self._k)
+                self._waiting += 1
+            print(self._waiting)    
 
         self._numbers_scores = self._game.write_scores()
 
@@ -77,7 +84,7 @@ class BubbleBobbleGUI:
         for a in arena.actors():
             if a.symbol() != (0, 0, 0, 0):
                 g2d.draw_image_clip(self._sprites, a.symbol(), a.position())
-            #else:
-            #   g2d.fill_rect(a.position())       
+            else:
+               g2d.fill_rect(a.position())       
   
 gui = BubbleBobbleGUI()
