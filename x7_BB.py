@@ -202,9 +202,9 @@ class Dragon(Actor):
     def attack(self):
         if self._lives > 0:    
             if self._last_dx < 0:
-                Bubble(self._arena, (self._x, self._y), -2)
+                Bubble(self._arena, (self._x, self._y), -5)
             else:
-                Bubble(self._arena, (self._x, self._y), 2)             
+                Bubble(self._arena, (self._x, self._y), 5)             
 
     def collide(self, other):
         if isinstance(other, Wall):

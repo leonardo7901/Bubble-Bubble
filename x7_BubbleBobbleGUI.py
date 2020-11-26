@@ -63,15 +63,14 @@ class BubbleBobbleGUI:
         if self._game.game_won():
             if self._waiting >= 0:
                 self._k += 1
-                self._waiting = -165
                 if self._k >= self._game.total_levels():
                     g2d.clear_canvas()
                     g2d.alert("Game Won!")
                 else:
                     self._game.levels(self._k) 
             else:
-                self._waiting += 1
-            print(self._waiting)    
+                self._waiting += 1 
+            print(self._waiting)
 
         self._numbers_scores = self._game.write_scores()
 
@@ -84,7 +83,7 @@ class BubbleBobbleGUI:
         for a in arena.actors():
             if a.symbol() != (0, 0, 0, 0):
                 g2d.draw_image_clip(self._sprites, a.symbol(), a.position())
-            else:
-               g2d.fill_rect(a.position())       
+            #else:
+            #   g2d.fill_rect(a.position())       
   
 gui = BubbleBobbleGUI()
