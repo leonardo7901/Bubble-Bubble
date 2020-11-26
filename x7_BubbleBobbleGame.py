@@ -55,18 +55,16 @@ class BubbleBobbleGame:
                 #self._player.append(Dragon(self._arena, (self._x_dragon2, self._y_dragon2)) )
 
         if self._player1_ready and self._player2_ready:
-            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1))
-            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2))
+            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 1)
+            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 2)
             self._player.append(self._player1)
             self._player.append(self._player2)
         elif self._player1_ready and not(self._player2_ready):
-            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1))
+            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 1)
             self._player.append(self._player1)
         elif self._player2_ready and not(self._player1_ready):
-            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2))
-            self._player.append(self._player2)
-
-        print(self._player1_ready, self._player2_ready)        
+            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 2)
+            self._player.append(self._player2)       
 
         with open(self._config_Enemy, "r") as config_enemy:
             for line in config_enemy:

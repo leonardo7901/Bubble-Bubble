@@ -146,13 +146,18 @@ class Enemy(Actor):
         return self._x_symbol, self._y_symbol, self._w, self._h      
 
 class Dragon(Actor):
-    def __init__(self, arena, pos):
+    def __init__(self, arena, pos, player):
         self._x, self._y = pos
         self._spawn = pos
+        self._player = player
         self._w, self._h = 16, 16
         self._lives = 3
-        self._x_symbol, self._y_symbol = 1268, 16
-        self._last_x_symbol, self._last_y_symbol = 1268, 16
+        if self._player == 1:
+            self._x_symbol, self._y_symbol = 1268, 16
+            self._last_x_symbol, self._last_y_symbol = 1268, 16
+        elif self._player == 2:
+            self._x_symbol, self._y_symbol = 329, 16
+            self._last_x_symbol, self._last_y_symbol = 329,16    
         self._last_dx = 0
         self._dx, self._dy, self._speed = 0, 0, 10
         self._arena = arena
@@ -264,27 +269,50 @@ class Dragon(Actor):
     def position(self):
         return self._x, self._y, self._w, self._h
 
-    def symbol(self):      
-        if self._dx < 0:
-            self._x_symbol, self._y_symbol = 6, 16
-            self._last_x_symbol, self._last_y_symbol = 6,16
-        elif self._dx > 0:
-            self._x_symbol, self._y_symbol = 1268, 16
-            self._last_x_symbol, self._last_y_symbol = 1268,16    
+    def symbol(self):     
+        if self._player == 1: 
+            if self._dx < 0:
+                self._x_symbol, self._y_symbol = 6, 16
+                self._last_x_symbol, self._last_y_symbol = 6,16
+            elif self._dx > 0:
+                self._x_symbol, self._y_symbol = 1268, 16
+                self._last_x_symbol, self._last_y_symbol = 1268,16    
 
-        if self._dy < 0:
-            if self._last_dx < 0:
-                self._x_symbol, self._y_symbol = 217, 36
-            else:    
-                self._x_symbol, self._y_symbol = 1058, 36
-        elif self._dy > 0:
-            if self._last_dx < 0:
-                self._x_symbol, self._y_symbol = 238, 36
-            else:    
-                self._x_symbol, self._y_symbol = 1037, 36       
+            if self._dy < 0:
+                if self._last_dx < 0:
+                    self._x_symbol, self._y_symbol = 217, 36
+                else:    
+                    self._x_symbol, self._y_symbol = 1058, 36
+            elif self._dy > 0:
+                if self._last_dx < 0:
+                    self._x_symbol, self._y_symbol = 238, 36
+                else:    
+                    self._x_symbol, self._y_symbol = 1037, 36       
+            
+            if self._landed == True:
+                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
         
-        if self._landed == True:
-            self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
+        elif self._player == 2:
+            if self._dx < 0:
+                self._x_symbol, self._y_symbol = 329, 16
+                self._last_x_symbol, self._last_y_symbol = 329,16
+            elif self._dx > 0:
+                self._x_symbol, self._y_symbol = 946, 16
+                self._last_x_symbol, self._last_y_symbol = 946,16    
+
+            if self._dy < 0:
+                if self._last_dx < 0:
+                    self._x_symbol, self._y_symbol = 541, 36
+                else:    
+                    self._x_symbol, self._y_symbol = 714, 36
+            elif self._dy > 0:
+                if self._last_dx < 0:
+                    self._x_symbol, self._y_symbol = 562, 36
+                else:    
+                    self._x_symbol, self._y_symbol = 736, 36       
+            
+            if self._landed == True:
+                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
 
         return self._x_symbol, self._y_symbol, self._w, self._h
 
