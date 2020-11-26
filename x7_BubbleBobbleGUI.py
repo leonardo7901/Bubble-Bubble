@@ -15,14 +15,17 @@ class BubbleBobbleGUI:
         self._x_y_background = [(0,0), (0, 0), (512, 0), (0, 0), (0, 0)]
         self._player1_ready, self._player2_ready = False, False
         self._k = 0
-        self._numbers_scores = []
-        self._x = 8
+        self._numbers_scores1 = []
+        self._numbers_scores2 = []
+        self._x1 = 8
+        self._x2 = 300
         g2d.init_canvas(self._game.arena().size())
         g2d.main_loop(self.tick)
 
     def movement(self):
         player1 = self._game.player1()
         player2 = self._game.player2()
+
         if g2d.key_pressed("w"):
             player1.go_up()
 
@@ -37,8 +40,6 @@ class BubbleBobbleGUI:
             player1.go_left(False)
 
         if g2d.key_pressed("q"):
-            if self._k == 0:
-                self._player1_ready = not self._player1_ready
             player1.attack()
 
         if g2d.key_pressed("ArrowUp"):
@@ -55,11 +56,15 @@ class BubbleBobbleGUI:
             player2.go_left(False)
 
         if g2d.key_pressed("Spacebar"):
-            if self._k == 0:
-                self._player2_ready = not self._player2_ready
             player2.attack()
 
         if self._k == 0:
+            if g2d.key_pressed("q"):
+                self._player1_ready = not self._player1_ready
+
+            if g2d.key_pressed("Spacebar"):
+                self._player2_ready = not self._player2_ready
+
             if self._player1_ready or self._player2_ready:
                 if g2d.key_pressed("Enter"):
                     self._k = 1
@@ -96,13 +101,19 @@ class BubbleBobbleGUI:
         else:
             g2d.draw_image_clip(self._end, (0, 0, 512, 424), (0, 32, 512, 424))  
 
-        self._numbers_scores = self._game.write_scores()
+        self._numbers_scores1, self._numbers_scores2 = self._game.write_scores()
 
-        self._x = 8
-        for i in self._numbers_scores:
-            self._x_number, self._y_number = i
-            g2d.draw_image_clip(self._sprites, (self._x_number, self._y_number, 8, 8), (self._x, 8, 8, 8))
-            self._x += 8
+        self._x1 = 8
+        for i in self._numbers_scores1:
+            self._x_number1, self._y_number1 = i
+            g2d.draw_image_clip(self._sprites, (self._x_number1, self._y_number1, 8, 8), (self._x1, 8, 8, 8))
+            self._x1 += 8
+
+        self._x2 = 300
+        for h in self._numbers_scores2:
+            self._x_number2, self._y_number2 = h
+            g2d.draw_image_clip(self._sprites, (self._x_number2, self._y_number2, 8, 8), (self._x2, 8, 8, 8))
+            self._x2 += 8    
 
         for a in arena.actors():
             if a.symbol() != (0, 0, 0, 0):

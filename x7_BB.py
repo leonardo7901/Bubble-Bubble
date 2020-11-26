@@ -352,25 +352,39 @@ class Bubble(Actor):
 
 class Score():
     def __init__(self):
-        self._score = 0
+        self._score1 = 0
+        self._score2 = 0
         self._x_symbol = 148
         self._numbers_white = []
-        self._symbol_list = [(148, 1608)]
+        self._symbol_list1 = []
+        self._symbol_list2 = []
         for i in range(10):
             self._numbers_white.append((self._x_symbol, 1608))
             self._x_symbol += 9
 
-    def score(self, n):
-        self._symbol_list = []
-        self._score += n
-        self._score = str(self._score)
-        for h in self._score:
-            self._symbol_list.append(self._numbers_white[int(h)])
-            str(h)
-        self._score = int(self._score)
-        print(self._score)
-        return self._symbol_list
+    def score(self, n, m):
+        self._symbol_list1 = []
+        self._symbol_list2 = []
+        self._score1 = n
+        self._score2 = m 
 
-    def reset(self):
-        self._score = 0    
+        self._score1 = str(self._score1)
+        for h in self._score1:
+            self._symbol_list1.append(self._numbers_white[int(h)])
+            str(h)
+        self._score1 = int(self._score1)
+
+        self._score2 = str(self._score2)
+        for h in self._score2:
+            self._symbol_list2.append(self._numbers_white[int(h)])
+            str(h)
+        self._score2 = int(self._score2)
+
+        return self._symbol_list1, self._symbol_list2
+
+    def reset(self, c):
+        if c == 1:
+            self._score1 = 0
+        else:  
+            self._score2 = 0  
             

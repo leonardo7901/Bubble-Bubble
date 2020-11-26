@@ -12,8 +12,10 @@ class BubbleBobbleGame:
         self._win = False
         self._levels = ["BB_main_menu.csv", "BB_level_1.csv", "BB_level_2.csv", "BB_end.csv"]
         self._config_Enemy, self._config_Dragon = "BB_config_Enemy_out_of_map.csv", "BB_config_Dragon_out_of_map.csv"
-        self._points = 0
-        self._coordinates = []
+        self._points1 = 0
+        self._points2 = 0
+        self._coordinates1 = []
+        self._coordinates2 = []
         self._enemies = []
         self._walls = []
         self._player = []
@@ -40,22 +42,31 @@ class BubbleBobbleGame:
             obj.remove() 
 
         with open(self._config_Dragon, "r") as config_dragon:
-            if self._player1_ready:
                 first_line = config_dragon.readline()
                 splitted_line = first_line.split(', ')
                 self._x_dragon1 = int(splitted_line[0])
                 self._y_dragon1 = int(splitted_line[1])
-                self._player.append(Dragon( self._arena, (self._x_dragon1, self._y_dragon1)) )
-            if self._player2_ready:    
+                #self._player.append(Dragon(self._arena, (self._x_dragon1, self._y_dragon1)) )
+    
                 second_line = config_dragon.readline()
                 splitted_line = second_line.split(', ')
                 self._x_dragon2 = int(splitted_line[0])
                 self._y_dragon2 = int(splitted_line[1])      
-                self._player.append(Dragon( self._arena, (self._x_dragon2, self._y_dragon2)) )
-        self._player.reverse()
-        self._player1 = self._player[0]
-        self._player2 = self._player[1]
-        self._player.reverse()   
+                #self._player.append(Dragon(self._arena, (self._x_dragon2, self._y_dragon2)) )
+
+        if self._player1_ready and self._player2_ready:
+            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1))
+            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2))
+            self._player.append(self._player1)
+            self._player.append(self._player2)
+        elif self._player1_ready and not(self._player2_ready):
+            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1))
+            self._player.append(self._player1)
+        elif self._player2_ready and not(self._player1_ready):
+            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2))
+            self._player.append(self._player2)
+
+        print(self._player1_ready, self._player2_ready)        
 
         with open(self._config_Enemy, "r") as config_enemy:
             for line in config_enemy:
@@ -86,13 +97,14 @@ class BubbleBobbleGame:
     def game_won(self):
         if self._player1.enemy_killed():
             self._cont_killed += 1
-            self._points = 500
-        else:
-            self._points = 0    
+            self._points1 += 500
+
+        if self._player2.enemy_killed():
+            self._cont_killed += 1
+            self._points2 += 500     
 
         if self._cont_killed == self._cont_enemy:   
             self._win = True
-            #self._cont_killed = 0
         else:
             self._win = False                        
         
@@ -102,29 +114,32 @@ class BubbleBobbleGame:
         if self._player1_ready and self._player2_ready:
             if self._player1.dead() and self._player1.dead():
                 self._lost = True
-                self._scores.reset()
+                self._scores.reset(1)
+                self._scores.reset(2)
             else:
                 self._lost = False
         else:        
             if self._player1_ready:
-                if self._player1.dead() and self._player2_ready == False:
+                if self._player1.dead():
                     self._lost = True
-                    self._scores.reset()
+                    self._scores.reset(1)
                 else:
                     self._lost = False
             elif self._player2_ready:
                 if self._player2.dead():
                     self._lost = True
-                    self._scores.reset()
+                    self._scores.reset(2)
                 else:
-                    self._lost = False
+                    self._lost = False   
+            else:
+                self._lost = False        
 
         return self._lost                  
 
     def write_scores(self):
-        self._coordinates = self._scores.score(self._points)
+        self._coordinates1, self._coordinates2 = self._scores.score(self._points1, self._points2)
         
-        return self._coordinates
+        return self._coordinates1, self._coordinates2
 
     def total_levels(self):
         return (len(self._levels) - 1)
