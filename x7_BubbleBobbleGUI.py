@@ -9,7 +9,7 @@ class BubbleBobbleGUI:
         self._total_levels = self._game.total_levels()
         self._sprites = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble.png")
         self._background = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble-maps.png")
-        self._ready = g2d.load_image("r-nr.png")
+        self._ready = g2d.load_image("BB_ready_not-ready.png")
         self._menu = g2d.load_image("BB-main-menu.png")
         self._end = g2d.load_image("BB-end.png")
         self._x_y_background = [(0,0), (0, 0), (512, 0), (0, 0), (0, 0)]
@@ -103,13 +103,16 @@ class BubbleBobbleGUI:
 
         self._numbers_scores1, self._numbers_scores2 = self._game.write_scores()
 
+        g2d.set_color((0, 0, 0))
+        g2d.fill_rect((0, 0, 512, 32))
+
         self._x1 = 8
         for i in self._numbers_scores1:
             self._x_number1, self._y_number1 = i
             g2d.draw_image_clip(self._sprites, (self._x_number1, self._y_number1, 8, 8), (self._x1, 8, 8, 8))
             self._x1 += 8
 
-        self._x2 = 300
+        self._x2 = 450
         for h in self._numbers_scores2:
             self._x_number2, self._y_number2 = h
             g2d.draw_image_clip(self._sprites, (self._x_number2, self._y_number2, 8, 8), (self._x2, 8, 8, 8))

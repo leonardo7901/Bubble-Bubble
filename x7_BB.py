@@ -209,10 +209,13 @@ class Dragon(Actor):
     #metodo che crea oggetti bolla ogni volta che viene invocato
     def attack(self):
         if self._lives > 0:
+            if len(self._bubbles) > 10:
+                del self._bubbles[0]
+
             if self._last_dx < 0:
-                self._bubbles.append(Bubble(self._arena, (self._x, self._y), -5))
+                self._bubbles.append(Bubble(self._arena, (self._x, self._y), -5, self._player))
             else:
-                self._bubbles.append(Bubble(self._arena, (self._x, self._y), 5))     
+                self._bubbles.append(Bubble(self._arena, (self._x, self._y), 5, self._player))             
                             
     def collide(self, other):
         if isinstance(other, Wall):
@@ -317,10 +320,12 @@ class Dragon(Actor):
         return self._x_symbol, self._y_symbol, self._w, self._h
 
 class Bubble(Actor):
-    def __init__(self, arena, pos, dx):
+    def __init__(self, arena, pos, dx, player):
         self._x, self._y = pos
+        self._player = player
         self._w, self._h = 16, 16
-        self._dx, self._dy = dx, -1
+        self._dx, self._dy = dx, 0
+        self._direction = self._dx
         self._frame = 20
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
@@ -341,6 +346,7 @@ class Bubble(Actor):
                 self._y = 32
                 self._dy = 0    
         else:
+            self._dy = -1
             self._y += self._dy
             if self._y <= 64:
                 self._y = 64
@@ -375,8 +381,32 @@ class Bubble(Actor):
     def position(self):
         return self._x, self._y, self._w, self._h
 
-    def symbol(self):      
-        return 6, 1072, self._w, self._h
+    def symbol(self): 
+        if self._player == 1:
+            if self._dx < 0:
+               self._x_symbol, self._y_symbol = 78, 1050 
+            elif self._dx > 0:
+                self._x_symbol, self._y_symbol = 1198, 1050
+
+            if self._dy < 0:
+                if self._direction < 0:
+                    self._x_symbol, self._y_symbol = 8, 1071
+                elif  self._direction > 0:
+                    self._x_symbol, self._y_symbol = 1270, 1071    
+
+        if self._player == 2:
+            if self._dx < 0:
+                self._x_symbol, self._y_symbol = 293, 1050
+            elif self._dx > 0:
+                self._x_symbol, self._y_symbol = 983, 1050
+
+            if self._dy < 0:
+                if self._direction < 0:
+                    self._x_symbol, self._y_symbol = 62, 1071
+                elif  self._direction > 0:
+                    self._x_symbol, self._y_symbol = 1216, 1071           
+
+        return self._x_symbol, self._y_symbol, self._w, self._h
 
 class Score():
     def __init__(self):

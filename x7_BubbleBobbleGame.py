@@ -46,13 +46,11 @@ class BubbleBobbleGame:
                 splitted_line = first_line.split(', ')
                 self._x_dragon1 = int(splitted_line[0])
                 self._y_dragon1 = int(splitted_line[1])
-                #self._player.append(Dragon(self._arena, (self._x_dragon1, self._y_dragon1)) )
     
                 second_line = config_dragon.readline()
                 splitted_line = second_line.split(', ')
                 self._x_dragon2 = int(splitted_line[0])
                 self._y_dragon2 = int(splitted_line[1])      
-                #self._player.append(Dragon(self._arena, (self._x_dragon2, self._y_dragon2)) )
 
         if self._player1_ready and self._player2_ready:
             self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 1)
