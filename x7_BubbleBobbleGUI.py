@@ -17,8 +17,7 @@ class BubbleBobbleGUI:
         self._k = 0
         self._numbers_scores1 = []
         self._numbers_scores2 = []
-        self._x1 = 8
-        self._x2 = 300
+        self._x1, self._x2 = 8, 450
         g2d.init_canvas(self._game.arena().size())
         g2d.main_loop(self.tick)
 
