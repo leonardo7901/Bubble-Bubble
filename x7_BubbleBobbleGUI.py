@@ -60,13 +60,13 @@ class BubbleBobbleGUI:
             player2.attack()
 
         if self._current_level == 0:
-            if g2d.key_pressed("q"):
+            if g2d.key_pressed("q"):   #il giocatore 1 viene evidenziato pronto o non pronto quando viene premuto il tasto 
                 self._player1_ready = not self._player1_ready
 
-            if g2d.key_pressed("Spacebar"):
+            if g2d.key_pressed("Spacebar"):   #il giocatore 2 viene evidenziato pronto o non pronto quando viene premuto il tasto 
                 self._player2_ready = not self._player2_ready
 
-            if self._player1_ready or self._player2_ready:
+            if self._player1_ready or self._player2_ready:   #invoca il metodo che cambia livello, se almeno un giocatore è pronto
                 if g2d.key_pressed("Enter"):
                     self._current_level = 1
                     self._game.levels(self._current_level, self._player1_ready, self._player2_ready)          
@@ -77,28 +77,28 @@ class BubbleBobbleGUI:
         arena.move_all()    
         g2d.clear_canvas()
         
-        if 0 < self._current_level < self._total_levels:
+        if 0 < self._current_level < self._total_levels:   #se il livello attuale è un livello di gioco, disegna il background inerente
             self._x_background, self._y_background = self._x_y_background[self._current_level]
             g2d.draw_image_clip(self._background, (self._x_background, self._y_background, 512, 424), (0, 32, 512, 424))
 
             if self._game.game_won():
-                if self._win:
+                if self._win:   #condizioni che peremettono di conoscere il momento in cui si vince
                     self._time_of_win = arena.count()
                 self._win = False
-                if arena.count() - self._time_of_win > 90:
+                if arena.count() - self._time_of_win > 90:   #se sono passati almeno 90 frame dalla vittoria, cambia livello
                     self._current_level += 1
                     self._game.levels(self._current_level, self._player1_ready, self._player2_ready)
                     self._win = True           
             
             if self._game.game_over():
-                if self._lost:
+                if self._lost:   #condizioni che peremettono di conoscere il momento in cui si perde
                     self._time_of_win = arena.count()
                 self._lost = False
-                if arena.count() - self._time_of_lost > 90:
+                if arena.count() - self._time_of_lost > 90:   #se sono passati almeno 90 frame dalla sconfitta, ritorna al menu
                     self._current_level = 0
                     self._game.levels(self._current_level, self._player1_ready, self._player2_ready)
                     self._lost = True
-        elif self._current_level == 0:
+        elif self._current_level == 0:   #se si è nel menu, disegna il background inerente e se e quale giocatore è pronto  
             g2d.draw_image_clip(self._menu, (0, 0, 512, 424), (0, 32, 512, 424))
             if self._player1_ready:    
                 g2d.draw_image_clip(self._ready, (0, 0, 100, 18), (312, 284, 100, 16))
@@ -109,12 +109,13 @@ class BubbleBobbleGUI:
             else:
                 g2d.draw_image_clip(self._ready, (0, 20, 174, 18), (312, 316, 174, 16))
         else:
-            g2d.draw_image_clip(self._end, (0, 0, 512, 424), (0, 32, 512, 424))  
+            g2d.draw_image_clip(self._end, (0, 0, 512, 424), (0, 32, 512, 424))   #disegna il background finale  
 
         g2d.set_color((0, 0, 0))
         g2d.fill_rect((0, 0, 512, 48))
 
-        self._numbers_scores1, self._numbers_scores2 = self._game.write_scores()
+        #parte di codice che scrive il punteggio del player 1 e 2
+        self._numbers_scores1, self._numbers_scores2 = self._game.write_scores()                                                                           
         self._x1 = 2
         for i in self._numbers_scores1:
             self._x_number1, self._y_number1 = i

@@ -21,17 +21,18 @@ class BubbleBobbleGame:
         self._player1_ready, self._player2_ready = False, False
         self.levels(0, True, True)    
 
-    def levels(self, n, player1_ready, player2_ready):
+    def levels(self, n, player1_ready, player2_ready):   #metodo che gestisce i livelli
         self._current_level = self._levels[n]
         self._player1_ready, self._player2_ready = player1_ready, player2_ready 
         self._cont_enemy = 0
         self._cont_killed = 0
 
-        if 0 < n < self._game_length:
+        if 0 < n < self._game_length:   #in base al livello corrente, cambia la configurazione dei vari oggetti
             self._config_Enemy, self._config_Dragon = "BB_config_Enemy.csv", "BB_config_Dragon.csv"
         else:
             self._config_Enemy, self._config_Dragon = "BB_config_Enemy_out_of_map.csv", "BB_config_Dragon_out_of_map.csv"   
 
+        #parte di codice che ripulisce l'arena dai vari oggetti, utile nel cambio livello
         for obj in self._player:
             obj.remove_bubbles()
             obj.remove()
@@ -40,7 +41,7 @@ class BubbleBobbleGame:
         for obj in self._walls:
             obj.remove() 
 
-        with open(self._config_Dragon, "r") as config_dragon:
+        with open(self._config_Dragon, "r") as config_dragon:   #legge file configurazione giocatori
                 first_line = config_dragon.readline()
                 splitted_line = first_line.split(', ')
                 self._x_dragon1 = int(splitted_line[0])
@@ -51,6 +52,7 @@ class BubbleBobbleGame:
                 self._x_dragon2 = int(splitted_line[0])
                 self._y_dragon2 = int(splitted_line[1])      
 
+        #viene deciso, in base a quale giocatore è pronto, chi è player 1 e 2
         if self._player1_ready and self._player2_ready:
             self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 0)
             self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 1)
@@ -63,7 +65,7 @@ class BubbleBobbleGame:
             self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 1)
             self._player.append(self._player2)       
 
-        with open(self._config_Enemy, "r") as config_enemy:
+        with open(self._config_Enemy, "r") as config_enemy:   #legge file configurazione nemici e crea tali oggetti
             for line in config_enemy:
                 splitted_line = line.split(', ')
                 self._x_enemy = int(splitted_line[0])
@@ -71,7 +73,7 @@ class BubbleBobbleGame:
                 self._enemies.append( Enemy(self._arena, (self._x_enemy, self._y_enemy)) )
                 self._cont_enemy += 1
 
-        with open(self._current_level, "r") as config_wall:
+        with open(self._current_level, "r") as config_wall:   #legge file configurazione muri e crea tali oggetti
             for line in config_wall:
                 splitted_line = line.split(', ')
                 self._x_wall = int(splitted_line[0])
@@ -89,7 +91,7 @@ class BubbleBobbleGame:
     def player2(self):
         return self._player2 
 
-    def game_won(self):
+    def game_won(self):   #metodo che controlla se si ha vinto
         if self._player1.enemy_killed():
             self._cont_killed += 1
             self._points1 += 500
@@ -105,7 +107,7 @@ class BubbleBobbleGame:
         
         return self._win
 
-    def game_over(self):
+    def game_over(self):   #metodo che controlla se si ha perso
         if self._player1_ready and self._player2_ready:
             if self._player1.dead() and self._player1.dead():
                 self._lost = True
@@ -131,7 +133,7 @@ class BubbleBobbleGame:
 
         return self._lost                  
 
-    def write_scores(self):
+    def write_scores(self):   #metodo che controlla restituisce le coordinate dei simboli dei punteggi, tramite la classe Score
         self._coordinates1, self._coordinates2 = self._scores.score(self._points1, self._points2)
         
         return self._coordinates1, self._coordinates2

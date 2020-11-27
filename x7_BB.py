@@ -43,8 +43,7 @@ class Enemy(Actor):
         arena.add(self)
 
     def move(self): 
-        #scelta "casuale" della direzione 
-        self._movement = randint(0,3)
+        self._movement = randint(0,3)   #scelta "casuale" della direzione 
         if self._movement == 0:
             self.go_up()
         elif self._movement == 1:
@@ -52,8 +51,7 @@ class Enemy(Actor):
         elif self._movement == 2:
             self.go_left(True)
 
-        #controlla e decide lo spostamento dell'avversario, in base a se è stato colpito dalla bolla o meno
-        if self._collided == True:
+        if self._collided == True:   #controlla e decide lo spostamento dell'avversario, in base a se è stato colpito dalla bolla o meno
             self._dx, self._dy = 0, -1
         else:
             self._dy = self._dy + self._g    
@@ -71,8 +69,7 @@ class Enemy(Actor):
         elif self._x > self._arena_w - self._w:
             self._x = self._arena_w - self._w       
         
-        #controlla se lo sprite sta saltando
-        if self._dy != 0:
+        if self._dy != 0:   #controlla se lo sprite sta saltando
             self._landed = False
 
     def go_up(self):
@@ -120,8 +117,7 @@ class Enemy(Actor):
             if self._collided == True:
                 self.death()    
 
-    #restituisce se l'avversario è stato o meno colpito dalla bolla
-    def collided(self):
+    def collided(self):   #restituisce se l'avversario è stato o meno colpito dalla bolla
         return self._collided
 
     def death(self):
@@ -205,8 +201,7 @@ class Dragon(Actor):
         else:
             self._dx = 0       
 
-    #metodo che crea oggetti bolla ogni volta che viene invocato
-    def attack(self):
+    def attack(self):   #metodo che crea oggetti bolla ogni volta che viene invocato
         if self._lives > 0:
             if self._last_dx < 0:
                 self._bubbles.append(Bubble(self._arena, (self._x, self._y), -5, self._player))
@@ -266,7 +261,7 @@ class Dragon(Actor):
     def remove(self):
         self._arena.remove(self)
 
-    def remove_bubbles(self):
+    def remove_bubbles(self):   #metodo che rimuove ogni bolla dall'arena
         for obj in self._bubbles:
             obj.death()
 
@@ -314,8 +309,7 @@ class Bubble(Actor):
         arena.add(self)
 
     def move(self):
-        #movimento lungo asse x per tot frame
-        if self._frame > 0:
+        if self._frame > 0:   #movimento lungo asse x per tot frame
             self._frame -= 1
 
             self._x += self._dx
@@ -357,7 +351,7 @@ class Bubble(Actor):
         if isinstance(other, Enemy):
             self.death()   
 
-    def check_actors(self):
+    def check_actors(self):   #metodo che, se sono passati più di tot frame dalla creazione dell'oggetto bolla, esso viene rimosso dall'arena
         if self._arena.count() - self._time_of_spawn > 150:
             self.death()  
 
@@ -408,9 +402,9 @@ class Score():
         self._score1 = n
         self._score2 = m 
 
-        self._score1 = str(self._score1)
-        for h in self._score1:
-            self._symbol_list1.append(self._numbers_white[int(h)])
+        self._score1 = str(self._score1)   #casta come stringa il punteggio, così da poterlo iterare
+        for h in self._score1:   #itera il punteggio
+            self._symbol_list1.append(self._numbers_white[int(h)])   #append alla prima lista, le coordinate del simbolo corrisponendete alla cifra del punteggio
             str(h)
         self._score1 = int(self._score1)
 
@@ -422,7 +416,7 @@ class Score():
 
         return self._symbol_list1, self._symbol_list2
 
-    def reset(self, c):
+    def reset(self, c):   #metodo che permette l'azzeramento del punteggio, in caso di perdita
         if c == 1:
             self._score1 = 0
         elif c == 2:  
