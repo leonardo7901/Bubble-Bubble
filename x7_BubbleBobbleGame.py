@@ -27,7 +27,7 @@ class BubbleBobbleGame:
         self._cont_enemy = 0
         self._cont_killed = 0
 
-        if 0 < n < self._game_length :
+        if 0 < n < self._game_length:
             self._config_Enemy, self._config_Dragon = "BB_config_Enemy.csv", "BB_config_Dragon.csv"
         else:
             self._config_Enemy, self._config_Dragon = "BB_config_Enemy_out_of_map.csv", "BB_config_Dragon_out_of_map.csv"   

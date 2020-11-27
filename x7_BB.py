@@ -35,13 +35,11 @@ class Enemy(Actor):
         self._w, self._h = 16, 16
         self._x_symbol, self._y_symbol = 1269, 246
         self._last_x_symbol, self._last_y_symbol = 1269, 246
-        self._last_dx = 0
-        self._dx, self._dy, self._speed = 0, 0, 9
+        self._dx, self._dy, self._speed, self._g = 0, 0, 9, 0.4
+        self._last_dx = self._dx
+        self._landed, self._collided, self._dead = False, False, False
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
-        self._g = 0.4
-        self._landed, self._collided = False, False
-        self._dead = False
         arena.add(self)
 
     def move(self): 
@@ -153,26 +151,21 @@ class Enemy(Actor):
 
 class Dragon(Actor):
     def __init__(self, arena, pos, player):
-        self._x, self._y = pos
-        self._spawn = pos
+        self._x, self._y, self._spawn= pos
         self._player = player
         self._w, self._h = 16, 16
         self._lives = 3
+        self._dx, self._dy, self._speed, self._g = 0, 0, 10, 0.4
+        self._last_dx = self._dx
+        self._time_of_attack = 0
         self._symbols = [ [(6, 16), (1268, 16), (217, 36), (1058, 36), (238, 36), (1037, 36)], [(329, 16), (946, 16), (541, 36), (714, 36), (562, 36), (736, 36)] ]
         self._dragon_symbol = self._symbols[self._player]
         self._x_symbol, self._y_symbol = self._dragon_symbol[0]
-        self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol   
-        self._last_dx = 0
-        self._dx, self._dy, self._speed = 0, 0, 10
+        self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol 
+        self._landed, self._enemy_killed, self._enemy_dead, self._dead = False, False, False, False      
+        self._bubbles = []
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
-        self._g = 0.4
-        self._time_of_attack = 0
-        self._bubbles = []
-        self._landed = False
-        self._enemy_killed = False
-        self._enemy_dead = False
-        self._dead = False
         arena.add(self)
 
     def move(self):
@@ -306,12 +299,14 @@ class Dragon(Actor):
 class Bubble(Actor):
     def __init__(self, arena, pos, dx, player):
         self._x, self._y = pos
-        self._symbols = [ [(78, 1050), (1198, 1050), (8, 1071), (1270, 1071), (302, 65)], [(293, 1050), (983, 1050), (62, 1071), (1216, 1071), (302, 65)] ]
-        self._bubble_symbol = self._symbols[player]
         self._w, self._h = 16, 16
         self._dx, self._dy = dx, 0
         self._direction = self._dx
-        self._frame = 20
+        self._frame = 20    
+        self._symbols = [ [(78, 1050), (1198, 1050), (8, 1071), (1270, 1071), (302, 65)], [(293, 1050), (983, 1050), (62, 1071), (1216, 1071), (302, 65)] ]
+        self._bubble_symbol = self._symbols[player]
+        self._x_symbol, self._y_symbol = self._bubble_symbol[0]
+        self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
         self._time_of_spawn = self._arena.count()
@@ -404,7 +399,7 @@ class Score():
         for i in range(10):
             self._numbers_white.append((self._x_symbol, 1608))
             self._numbers_blue.append((self._x_symbol, 1620))
-            self._x_symbol += 9
+            self._x_symbol += 8
 
     def score(self, n, m):
         self._symbol_list1 = []
@@ -429,5 +424,5 @@ class Score():
     def reset(self, c):
         if c == 1:
             self._score1 = 0
-        else:  
+        elif c == 2:  
             self._score2 = 0  
