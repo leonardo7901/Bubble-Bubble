@@ -151,7 +151,8 @@ class Enemy(Actor):
 
 class Dragon(Actor):
     def __init__(self, arena, pos, player):
-        self._x, self._y, self._spawn= pos
+        self._x, self._y = pos 
+        self._spawn = pos
         self._player = player
         self._w, self._h = 16, 16
         self._lives = 3
@@ -303,7 +304,7 @@ class Bubble(Actor):
         self._dx, self._dy = dx, 0
         self._direction = self._dx
         self._frame = 20    
-        self._symbols = [ [(78, 1050), (1198, 1050), (8, 1071), (1270, 1071), (302, 65)], [(293, 1050), (983, 1050), (62, 1071), (1216, 1071), (302, 65)] ]
+        self._symbols = [ [(78, 1050), (1198, 1050), (6, 1072), (1268, 1072), (302, 65)], [(293, 1050), (983, 1050), (60, 1072), (1214, 1072), (302, 65)] ]
         self._bubble_symbol = self._symbols[player]
         self._x_symbol, self._y_symbol = self._bubble_symbol[0]
         self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
@@ -399,7 +400,7 @@ class Score():
         for i in range(10):
             self._numbers_white.append((self._x_symbol, 1608))
             self._numbers_blue.append((self._x_symbol, 1620))
-            self._x_symbol += 8
+            self._x_symbol += 9
 
     def score(self, n, m):
         self._symbol_list1 = []
