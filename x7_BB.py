@@ -163,6 +163,7 @@ class Dragon(Actor):
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
         self._g = 0.4
+        self._time_of_attack = 0
         self._bubbles = []
         self._landed = False
         self._enemy_killed = False
@@ -209,13 +210,14 @@ class Dragon(Actor):
     #metodo che crea oggetti bolla ogni volta che viene invocato
     def attack(self):
         if self._lives > 0:
-            if len(self._bubbles) > 10:
-                del self._bubbles[0]
-
             if self._last_dx < 0:
                 self._bubbles.append(Bubble(self._arena, (self._x, self._y), -5, self._player))
             else:
-                self._bubbles.append(Bubble(self._arena, (self._x, self._y), 5, self._player))             
+                self._bubbles.append(Bubble(self._arena, (self._x, self._y), 5, self._player))
+        
+        if len(self._bubbles) > 32:
+            self._bubbles[0].death()
+            self._bubbles.pop(0)
                             
     def collide(self, other):
         if isinstance(other, Wall):
@@ -235,7 +237,7 @@ class Dragon(Actor):
                 if nearest_border[2] != 0:
                     self._dy = 1
             else:
-                self._x += nearest_border[1] * nearest_border[0]
+                self._x += nearest_border[1] * nearest_border[0]    
         
         if isinstance(other, Enemy):
             self._bubbled = other.collided()  #chiede alla classe Enemy se l'avversario è stato colpito dalla bolla
@@ -267,7 +269,7 @@ class Dragon(Actor):
 
     def remove_bubbles(self):
         for obj in self._bubbles:
-            obj.remove()
+            obj.death()
 
     def position(self):
         return self._x, self._y, self._w, self._h
@@ -329,6 +331,7 @@ class Bubble(Actor):
         self._frame = 20
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
+        self._time_of_spawn = self._arena.count()
         arena.add(self)
 
     def move(self):
@@ -373,9 +376,9 @@ class Bubble(Actor):
                 self._x += nearest_border[1] * nearest_border[0]
         
         if isinstance(other, Enemy):
-            self.remove() 
+            self.death()   
 
-    def remove(self):
+    def death(self):
         self._arena.remove(self)
 
     def position(self):
@@ -391,8 +394,12 @@ class Bubble(Actor):
             if self._dy < 0:
                 if self._direction < 0:
                     self._x_symbol, self._y_symbol = 8, 1071
+                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
                 elif  self._direction > 0:
-                    self._x_symbol, self._y_symbol = 1270, 1071    
+                    self._x_symbol, self._y_symbol = 1270, 1071
+                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol    
+            elif self._y == 64:
+                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
 
         if self._player == 2:
             if self._dx < 0:
@@ -403,8 +410,13 @@ class Bubble(Actor):
             if self._dy < 0:
                 if self._direction < 0:
                     self._x_symbol, self._y_symbol = 62, 1071
+                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
                 elif  self._direction > 0:
-                    self._x_symbol, self._y_symbol = 1216, 1071           
+                    self._x_symbol, self._y_symbol = 1216, 1071
+                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
+            elif self._y == 64:
+                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
+
 
         return self._x_symbol, self._y_symbol, self._w, self._h
 
@@ -414,10 +426,12 @@ class Score():
         self._score2 = 0
         self._x_symbol = 148
         self._numbers_white = []
+        self._numbers_blue = []
         self._symbol_list1 = []
         self._symbol_list2 = []
         for i in range(10):
             self._numbers_white.append((self._x_symbol, 1608))
+            self._numbers_blue.append((self._x_symbol, 1620))
             self._x_symbol += 9
 
     def score(self, n, m):
@@ -434,7 +448,7 @@ class Score():
 
         self._score2 = str(self._score2)
         for h in self._score2:
-            self._symbol_list2.append(self._numbers_white[int(h)])
+            self._symbol_list2.append(self._numbers_blue[int(h)])
             str(h)
         self._score2 = int(self._score2)
 
@@ -445,4 +459,3 @@ class Score():
             self._score1 = 0
         else:  
             self._score2 = 0  
-            
