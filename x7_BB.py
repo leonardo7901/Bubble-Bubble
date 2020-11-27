@@ -1,4 +1,4 @@
-#progetto eseguito da Leonardo Fiore e Federico Putamorsi
+#progetto eseguito da Leonardo Fiore(322767) e Federico Putamorsi(320041)
 
 import g2d
 from actor import Actor, Arena
