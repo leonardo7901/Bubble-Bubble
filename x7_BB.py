@@ -16,6 +16,9 @@ class Wall(Actor):
 
     def collide(self, other):
         pass
+    
+    def check_actors(self):
+        pass
 
     def remove(self):
         self._arena.remove(self)
@@ -126,6 +129,9 @@ class Enemy(Actor):
     def death(self):
         self._arena.remove(self)
 
+    def check_actors(self):
+        pass    
+
     def position(self):
         return self._x, self._y, self._w, self._h
 
@@ -152,12 +158,10 @@ class Dragon(Actor):
         self._player = player
         self._w, self._h = 16, 16
         self._lives = 3
-        if self._player == 1:
-            self._x_symbol, self._y_symbol = 1268, 16
-            self._last_x_symbol, self._last_y_symbol = 1268, 16
-        elif self._player == 2:
-            self._x_symbol, self._y_symbol = 329, 16
-            self._last_x_symbol, self._last_y_symbol = 329,16    
+        self._symbols = [ [(6, 16), (1268, 16), (217, 36), (1058, 36), (238, 36), (1037, 36)], [(329, 16), (946, 16), (541, 36), (714, 36), (562, 36), (736, 36)] ]
+        self._dragon_symbol = self._symbols[self._player]
+        self._x_symbol, self._y_symbol = self._dragon_symbol[0]
+        self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol   
         self._last_dx = 0
         self._dx, self._dy, self._speed = 0, 0, 10
         self._arena = arena
@@ -214,10 +218,11 @@ class Dragon(Actor):
                 self._bubbles.append(Bubble(self._arena, (self._x, self._y), -5, self._player))
             else:
                 self._bubbles.append(Bubble(self._arena, (self._x, self._y), 5, self._player))
-        
+
+    def check_actors(self):
         if len(self._bubbles) > 32:
             self._bubbles[0].death()
-            self._bubbles.pop(0)
+            self._bubbles.pop(0)            
                             
     def collide(self, other):
         if isinstance(other, Wall):
@@ -244,7 +249,7 @@ class Dragon(Actor):
             if self._bubbled == False:    
                 self.death()
             else:
-                self._enemy_killed = True    
+                self._enemy_killed = True
 
     def enemy_killed(self):
         self._enemy_dead = self._enemy_killed
@@ -275,56 +280,34 @@ class Dragon(Actor):
         return self._x, self._y, self._w, self._h
 
     def symbol(self):     
-        if self._player == 1: 
-            if self._dx < 0:
-                self._x_symbol, self._y_symbol = 6, 16
-                self._last_x_symbol, self._last_y_symbol = 6,16
-            elif self._dx > 0:
-                self._x_symbol, self._y_symbol = 1268, 16
-                self._last_x_symbol, self._last_y_symbol = 1268,16    
+        if self._dx < 0:
+            self._x_symbol, self._y_symbol = self._dragon_symbol[0]
+            self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
+        elif self._dx > 0:
+            self._x_symbol, self._y_symbol = self._dragon_symbol[1]
+            self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol    
 
-            if self._dy < 0:
-                if self._last_dx < 0:
-                    self._x_symbol, self._y_symbol = 217, 36
-                else:    
-                    self._x_symbol, self._y_symbol = 1058, 36
-            elif self._dy > 0:
-                if self._last_dx < 0:
-                    self._x_symbol, self._y_symbol = 238, 36
-                else:    
-                    self._x_symbol, self._y_symbol = 1037, 36       
-            
-            if self._landed == True:
-                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
+        if self._dy < 0:
+            if self._last_dx < 0:
+                self._x_symbol, self._y_symbol = self._dragon_symbol[2]
+            else:    
+                self._x_symbol, self._y_symbol = self._dragon_symbol[3]
+        elif self._dy > 0:
+            if self._last_dx < 0:
+                self._x_symbol, self._y_symbol = self._dragon_symbol[4]
+            else:    
+                self._x_symbol, self._y_symbol = self._dragon_symbol[5]       
         
-        elif self._player == 2:
-            if self._dx < 0:
-                self._x_symbol, self._y_symbol = 329, 16
-                self._last_x_symbol, self._last_y_symbol = 329,16
-            elif self._dx > 0:
-                self._x_symbol, self._y_symbol = 946, 16
-                self._last_x_symbol, self._last_y_symbol = 946,16    
-
-            if self._dy < 0:
-                if self._last_dx < 0:
-                    self._x_symbol, self._y_symbol = 541, 36
-                else:    
-                    self._x_symbol, self._y_symbol = 714, 36
-            elif self._dy > 0:
-                if self._last_dx < 0:
-                    self._x_symbol, self._y_symbol = 562, 36
-                else:    
-                    self._x_symbol, self._y_symbol = 736, 36       
-            
-            if self._landed == True:
-                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
-
+        if self._landed == True:
+            self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
+        
         return self._x_symbol, self._y_symbol, self._w, self._h
 
 class Bubble(Actor):
     def __init__(self, arena, pos, dx, player):
         self._x, self._y = pos
-        self._player = player
+        self._symbols = [ [(78, 1050), (1198, 1050), (8, 1071), (1270, 1071), (302, 65)], [(293, 1050), (983, 1050), (62, 1071), (1216, 1071), (302, 65)] ]
+        self._bubble_symbol = self._symbols[player]
         self._w, self._h = 16, 16
         self._dx, self._dy = dx, 0
         self._direction = self._dx
@@ -378,6 +361,10 @@ class Bubble(Actor):
         if isinstance(other, Enemy):
             self.death()   
 
+    def check_actors(self):
+        if self._arena.count() - self._time_of_spawn > 150:
+            self.death()  
+
     def death(self):
         self._arena.remove(self)
 
@@ -385,38 +372,23 @@ class Bubble(Actor):
         return self._x, self._y, self._w, self._h
 
     def symbol(self): 
-        if self._player == 1:
-            if self._dx < 0:
-               self._x_symbol, self._y_symbol = 78, 1050 
-            elif self._dx > 0:
-                self._x_symbol, self._y_symbol = 1198, 1050
+        if self._dx < 0:
+            self._x_symbol, self._y_symbol = self._bubble_symbol[0] 
+        elif self._dx > 0:
+            self._x_symbol, self._y_symbol = self._bubble_symbol[1]
 
-            if self._dy < 0:
-                if self._direction < 0:
-                    self._x_symbol, self._y_symbol = 8, 1071
-                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
-                elif  self._direction > 0:
-                    self._x_symbol, self._y_symbol = 1270, 1071
-                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol    
-            elif self._y == 64:
-                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
+        if self._dy < 0:
+            if self._direction < 0:
+                self._x_symbol, self._y_symbol = self._bubble_symbol[2]
+                self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
+            elif  self._direction > 0:
+                self._x_symbol, self._y_symbol = self._bubble_symbol[3]
+                self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol    
+        elif self._y == 64:
+            self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
 
-        if self._player == 2:
-            if self._dx < 0:
-                self._x_symbol, self._y_symbol = 293, 1050
-            elif self._dx > 0:
-                self._x_symbol, self._y_symbol = 983, 1050
-
-            if self._dy < 0:
-                if self._direction < 0:
-                    self._x_symbol, self._y_symbol = 62, 1071
-                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
-                elif  self._direction > 0:
-                    self._x_symbol, self._y_symbol = 1216, 1071
-                    self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
-            elif self._y == 64:
-                self._x_symbol, self._y_symbol = self._last_x_symbol, self._last_y_symbol
-
+        if self._arena.count() - self._time_of_spawn > 150:
+            self._x_symbol, self._y_symbol = self._bubble_symbol[4]
 
         return self._x_symbol, self._y_symbol, self._w, self._h
 

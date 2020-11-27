@@ -7,31 +7,30 @@ class BubbleBobbleGame:
     def __init__(self):
         self._arena = Arena((512, 456))
         self._scores = Score()
-        self._cont_enemy = 0
-        self._cont_killed = 0
-        self._win = False
         self._levels = ["BB_main_menu.csv", "BB_level_1.csv", "BB_level_2.csv", "BB_end.csv"]
         self._config_Enemy, self._config_Dragon = "BB_config_Enemy_out_of_map.csv", "BB_config_Dragon_out_of_map.csv"
-        self._points1 = 0
-        self._points2 = 0
+        self._game_length = (len(self._levels) - 1)
+        self._cont_enemy, self._cont_killed = 0, 0
+        self._points1, self._points2 = 0, 0
         self._coordinates1 = []
         self._coordinates2 = []
         self._enemies = []
         self._walls = []
         self._player = []
+        self._win = False
         self._player1_ready, self._player2_ready = False, False
         self.levels(0, True, True)    
 
     def levels(self, n, player1_ready, player2_ready):
         self._current_level = self._levels[n]
         self._player1_ready, self._player2_ready = player1_ready, player2_ready 
+        self._cont_enemy = 0
+        self._cont_killed = 0
 
-        if 0 < n < (len(self._levels) - 1) :
+        if 0 < n < self._game_length :
             self._config_Enemy, self._config_Dragon = "BB_config_Enemy.csv", "BB_config_Dragon.csv"
         else:
             self._config_Enemy, self._config_Dragon = "BB_config_Enemy_out_of_map.csv", "BB_config_Dragon_out_of_map.csv"   
-        self._cont_enemy = 0
-        self._cont_killed = 0
 
         for obj in self._player:
             obj.remove_bubbles()
@@ -53,15 +52,15 @@ class BubbleBobbleGame:
                 self._y_dragon2 = int(splitted_line[1])      
 
         if self._player1_ready and self._player2_ready:
-            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 1)
-            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 2)
+            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 0)
+            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 1)
             self._player.append(self._player1)
             self._player.append(self._player2)
         elif self._player1_ready and not(self._player2_ready):
-            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 1)
+            self._player1 = Dragon(self._arena, (self._x_dragon1, self._y_dragon1), 0)
             self._player.append(self._player1)
         elif self._player2_ready and not(self._player1_ready):
-            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 2)
+            self._player2 = Dragon(self._arena, (self._x_dragon2, self._y_dragon2), 1)
             self._player.append(self._player2)       
 
         with open(self._config_Enemy, "r") as config_enemy:
@@ -138,6 +137,6 @@ class BubbleBobbleGame:
         return self._coordinates1, self._coordinates2
 
     def total_levels(self):
-        return (len(self._levels) - 1)
+        return self._game_length
 
 BubbleBobbleGame()        
