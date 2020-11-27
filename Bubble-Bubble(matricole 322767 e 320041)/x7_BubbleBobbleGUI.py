@@ -18,7 +18,7 @@ class BubbleBobbleGUI:
         self._current_level = 0
         self._numbers_scores1 = []
         self._numbers_scores2 = []
-        self._x1, self._x2 = 2, 450
+        self._x1, self._x2 = 8, 450
         self._win, self._lost = True, True
         g2d.init_canvas(self._game.arena().size())
         g2d.main_loop(self.tick)
@@ -118,14 +118,14 @@ class BubbleBobbleGUI:
         self._x1 = 2
         for i in self._numbers_scores1:
             self._x_number1, self._y_number1 = i
-            g2d.draw_image_clip(self._sprites, (self._x_number1, self._y_number1, 8, 7), (self._x1, 32, 12, 12))
+            g2d.draw_image_clip(self._sprites, (self._x_number1, self._y_number1, 9, 7), (self._x1, 32, 12, 12))
             g2d.draw_image_clip(self._sprites, (107, 1280, 37, 24), (2, 2, 37, 24))
             self._x1 += 12
 
         self._x2 = 450
         for h in self._numbers_scores2:
             self._x_number2, self._y_number2 = h
-            g2d.draw_image_clip(self._sprites, (self._x_number2, self._y_number2, 8, 7), (self._x2, 32, 12, 12))
+            g2d.draw_image_clip(self._sprites, (self._x_number2, self._y_number2, 9, 7), (self._x2, 32, 12, 12))
             g2d.draw_image_clip(self._sprites, (267, 1280, 49, 24), (450, 2, 49, 24))
             self._x2 += 12    
 
