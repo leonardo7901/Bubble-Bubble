@@ -10,8 +10,8 @@ class BubbleBobbleGUI:
         self._sprites = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble.png")
         self._background = g2d.load_image("https://tomamic.github.io/images/sprites/bubble-bobble-maps.png")
         self._ready = g2d.load_image("BB_ready_not-ready.png")
-        self._menu = g2d.load_image("BB-main-menu.png")
-        self._end = g2d.load_image("BB-end.png")
+        self._menu = g2d.load_image("BB_main_menu.png")
+        self._end = g2d.load_image("BB_end.png")
         self._x_y_background = [(0,0), (0, 0), (512, 0), (0, 0), (0, 0)]
         self._player1_ready, self._player2_ready = False, False
         self._k = 0

@@ -12,7 +12,6 @@ class BubbleBobbleGame:
         self._game_length = (len(self._levels) - 1)
         self._cont_enemy, self._cont_killed = 0, 0
         self._points1, self._points2 = 0, 0
-        self._time_of_win = 0
         self._coordinates1 = []
         self._coordinates2 = []
         self._enemies = []
@@ -99,13 +98,10 @@ class BubbleBobbleGame:
             self._cont_killed += 1
             self._points2 += 500     
 
-        if self._cont_killed == self._cont_enemy: 
-            self._time_of_win = self._arena.count()  
-            #self._win = True
+        if self._cont_killed == self._cont_enemy:   
+            self._win = True
         else:
             self._win = False                        
-        if self._arena.count() - self._time_of_win > 120 and self._cont_killed == self._cont_enemy:
-            self._win = True
         
         return self._win
 
