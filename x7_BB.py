@@ -154,7 +154,7 @@ class Dragon(Actor):
         self._lives = 3
         self._dx, self._dy, self._speed, self._g = 0, 0, 10, 0.4
         self._last_dx = self._dx
-        self._time_of_attack = 0
+        self._time_of_attack, self._time_of_death = 0, 0
         self._symbols = [ [(6, 16), (1268, 16), (217, 36), (1058, 36), (238, 36), (1037, 36)], [(329, 16), (946, 16), (541, 36), (714, 36), (562, 36), (736, 36)] ]
         self._dragon_symbol = self._symbols[self._player]
         self._x_symbol, self._y_symbol = self._dragon_symbol[0]
@@ -247,13 +247,15 @@ class Dragon(Actor):
         return self._enemy_dead           
 
     def death(self):
-        self._lives -= 1
-        if self._lives == 0:
-            self._arena.remove(self)
-            self._dead = True
-        else:
-            self._x, self._y = self._spawn
-            self._dead = False    
+        if self._arena.count() - self._time_of_death > 90:
+            self._lives -= 1
+            if self._lives == 0:
+                self._arena.remove(self)
+                self._dead = True
+            else:
+                self._time_of_death = self._arena.count()
+                self._x, self._y = self._spawn
+                self._dead = False    
 
     def dead(self):
         return self._dead        
