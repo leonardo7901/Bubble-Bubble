@@ -12,7 +12,7 @@ class BubbleBobbleGUI:
         self._menu = g2d.load_image("BB_main_menu.png")
         self._end = g2d.load_image("BB_end.png")
         self._ready = g2d.load_image("BB_ready_not-ready.png")
-        self._x_y_background = [(0,0), (0, 0), (512, 0), (0, 0), (0, 0)]
+        self._x_y_background = [(0, 0), (0, 0), (512, 0), (0, 0), (0, 0)]
         self._player1_ready, self._player2_ready = False, False
         self._time_of_win, self._time_of_lost = 0, 0
         self._current_level = 0
