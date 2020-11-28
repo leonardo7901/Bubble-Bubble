@@ -303,6 +303,7 @@ class Bubble(Actor):
         self._bubble_symbol = self._symbols[player]
         self._x_symbol, self._y_symbol = self._bubble_symbol[0]
         self._last_x_symbol, self._last_y_symbol = self._x_symbol, self._y_symbol
+        self._dead = False
         self._arena = arena
         self._arena_w, self._arena_h = self._arena.size()
         self._time_of_spawn = self._arena.count()
@@ -349,10 +350,13 @@ class Bubble(Actor):
                 self._x += nearest_border[1] * nearest_border[0]
         
         if isinstance(other, Enemy):
-            self.death()   
+            self._dead = True
 
-    def check_actors(self):   #metodo che, se sono passati più di tot frame dalla creazione dell'oggetto bolla, esso viene rimosso dall'arena
-        if self._arena.count() - self._time_of_spawn > 150:
+    def check_actors(self):   #metodo che controlla se è necessaria la rimozione dell'oggetto
+        if self._dead:
+            self.death()
+        
+        if self._arena.count() - self._time_of_spawn > 150:   #se sono passati più di tot frame dalla creazione dell'oggetto bolla, esso viene rimosso dall'arena
             self.death()  
 
     def death(self):
@@ -379,6 +383,9 @@ class Bubble(Actor):
 
         if self._arena.count() - self._time_of_spawn > 150:
             self._x_symbol, self._y_symbol = self._bubble_symbol[4]
+
+        if self._dead:
+            self._x_symbol, self._y_symbol = self._bubble_symbol[4]    
 
         return self._x_symbol, self._y_symbol, self._w, self._h
 
