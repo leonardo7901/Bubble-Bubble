@@ -111,21 +111,21 @@ class BubbleBobbleGame:
         if self._player1_ready and self._player2_ready:
             if self._player1.dead() and self._player1.dead():
                 self._lost = True
+                self._scores.reset(0)
                 self._scores.reset(1)
-                self._scores.reset(2)
             else:
                 self._lost = False
         else:        
             if self._player1_ready:
                 if self._player1.dead():
                     self._lost = True
-                    self._scores.reset(1)
+                    self._scores.reset(0)
                 else:
                     self._lost = False
             elif self._player2_ready:
                 if self._player2.dead():
                     self._lost = True
-                    self._scores.reset(2)
+                    self._scores.reset(1)
                 else:
                     self._lost = False   
             else:
@@ -133,7 +133,7 @@ class BubbleBobbleGame:
 
         return self._lost                  
 
-    def write_scores(self):   #metodo che controlla restituisce le coordinate dei simboli dei punteggi, tramite la classe Score
+    def write_scores(self):   #metodo che restituisce le coordinate dei simboli dei punteggi, tramite la classe Score
         self._coordinates1, self._coordinates2 = self._scores.score(self._points1, self._points2)
         
         return self._coordinates1, self._coordinates2
