@@ -426,7 +426,7 @@ class Score():
         return self._symbol_list1, self._symbol_list2
 
     def reset(self, c):   #metodo che permette l'azzeramento del punteggio, in caso di perdita
-        if c == 1:
+        if c == 0:
             self._score1 = 0
-        elif c == 2:  
+        elif c == 1:  
             self._score2 = 0  
